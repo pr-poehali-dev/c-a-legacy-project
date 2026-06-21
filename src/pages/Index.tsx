@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Icon from '@/components/ui/icon';
 
 const OFFICE_IMG = 'https://cdn.poehali.dev/projects/154b74f0-2dcb-452d-a810-3bc6c9c5086c/files/fc42b192-0948-45e7-b6af-167bdf0e4329.jpg';
@@ -33,9 +33,9 @@ const PROJECTS = [
 ];
 
 const ARCHIVE = [
-  { type: 'video', icon: 'Video', title: 'VHS-запись: Демонстрация Кейна', date: '12.03.1997', meta: 'Видео · 04:21 · повреждено' },
-  { type: 'audio', icon: 'AudioLines', title: 'Диктофон: Совещание о замене ИИ', date: '28.08.1998', meta: 'Аудио · 11:07' },
-  { type: 'audio', icon: 'Radio', title: 'Перехват: голос Кейна', date: '15.10.1999', meta: 'Аудио · 00:43 · искажено' },
+  { type: 'video', icon: 'Video', title: 'VHS-запись: Демонстрация Кейна', date: '12.03.1997', meta: 'Видео · 04:21 · повреждено', dur: 16, sound: 'corrupt' },
+  { type: 'audio', icon: 'AudioLines', title: 'Диктофон: Совещание о замене ИИ', date: '28.08.1998', meta: 'Аудио · 11:07', dur: 14, sound: 'voice' },
+  { type: 'audio', icon: 'Radio', title: 'Перехват: голос Кейна', date: '15.10.1999', meta: 'Аудио · 00:43 · искажено', dur: 10, sound: 'glitch' },
   { type: 'doc', icon: 'FileText', title: 'Отчёт: «Язык Скрэтча»', date: '04.02.1997', meta: 'Документ · 18 стр.' },
   { type: 'doc', icon: 'FileWarning', title: 'Протокол изоляции №7', date: '10.10.1999', meta: 'Документ · ДОСТУП ОГРАНИЧЕН' },
   { type: 'doc', icon: 'Building2', title: 'Акт о продаже офиса', date: '2008', meta: 'Документ · недвижимость' },
@@ -143,7 +143,7 @@ const Index = () => {
             <h4 className="font-display uppercase tracking-[0.2em] text-sm text-accent mb-5">Личное дело фирмы</h4>
             <dl className="space-y-4 font-body text-sm">
               {[
-                ['Полное имя', 'Creative & Artificial Intel.'],
+                ['Полное имя', 'Caine & Abel'],
                 ['Годы работы', '1995 — 1999'],
                 ['Сотрудников', '7 человек'],
                 ['Главный проект', 'ИИ «Кейн»'],
@@ -242,25 +242,7 @@ const Index = () => {
         <p className="font-body text-muted-foreground max-w-2xl mb-10 -mt-4">Встроенные видеозаписи, аудио и документы, извлечённые из систем компании. Часть файлов искажена влиянием Кейна.</p>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
           {ARCHIVE.map((a, i) => (
-            <div key={i} className="border border-border bg-card/50 p-5 flex flex-col hover:border-accent/50 transition-colors fade-up" style={{ animationDelay: `${i * 0.05}s` }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 flex items-center justify-center border border-border bg-background">
-                  <Icon name={a.icon} size={18} className={a.type === 'doc' ? 'text-accent' : 'text-primary'} />
-                </div>
-                <span className="font-display text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{a.date}</span>
-              </div>
-              <h4 className="font-display text-base mb-1 leading-snug">{a.title}</h4>
-              <p className="font-body text-xs text-muted-foreground mb-4">{a.meta}</p>
-              <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
-                <Icon name={a.type === 'doc' ? 'FileDown' : 'Play'} size={16} className="text-foreground/80" />
-                <div className="flex-1 h-1 bg-border relative overflow-hidden">
-                  <span className="absolute inset-y-0 left-0 w-1/4 bg-primary/60" />
-                </div>
-                <span className="font-display text-[10px] text-muted-foreground">
-                  {a.type === 'doc' ? 'Открыть' : 'Воспроизвести'}
-                </span>
-              </div>
-            </div>
+            <ArchiveCard key={i} a={a} delay={i * 0.05} />
           ))}
         </div>
       </Section>
@@ -275,6 +257,125 @@ const Index = () => {
           Creative &amp; Artificial Intelligence · 1995–1999 · Архив восстановлен
         </p>
       </footer>
+    </div>
+  );
+};
+
+type ArchiveItem = (typeof ARCHIVE)[number];
+
+const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+
+const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
+  const [playing, setPlaying] = useState(false);
+  const [time, setTime] = useState(0);
+  const ctxRef = useRef<AudioContext | null>(null);
+  const nodesRef = useRef<{ stop: () => void } | null>(null);
+  const rafRef = useRef<number>();
+  const startRef = useRef(0);
+
+  const isAudio = a.type !== 'doc';
+  const dur = a.dur ?? 0;
+
+  const stop = () => {
+    nodesRef.current?.stop();
+    nodesRef.current = null;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    setPlaying(false);
+  };
+
+  useEffect(() => () => stop(), []);
+
+  const buildSound = (ctx: AudioContext, kind: string) => {
+    const master = ctx.createGain();
+    master.gain.value = 0.18;
+    master.connect(ctx.destination);
+
+    if (kind === 'glitch' || kind === 'corrupt') {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      const data = buf.getChannelData(0);
+      for (let i = 0; i < data.length; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+      const noise = ctx.createBufferSource();
+      noise.buffer = buf; noise.loop = true;
+      const filt = ctx.createBiquadFilter();
+      filt.type = 'bandpass'; filt.frequency.value = kind === 'glitch' ? 900 : 400; filt.Q.value = 4;
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.frequency.value = kind === 'glitch' ? 7 : 2.5; lfoGain.gain.value = 600;
+      lfo.connect(lfoGain); lfoGain.connect(filt.frequency);
+      noise.connect(filt); filt.connect(master);
+      const osc = ctx.createOscillator();
+      osc.type = 'sawtooth'; osc.frequency.value = 55;
+      const og = ctx.createGain(); og.gain.value = 0.3;
+      osc.connect(og); og.connect(master);
+      noise.start(); lfo.start(); osc.start();
+      return { stop: () => { noise.stop(); lfo.stop(); osc.stop(); } };
+    }
+    // voice — пульсирующий тон, имитация речи
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle'; osc.frequency.value = 180;
+    const g = ctx.createGain(); g.gain.value = 0;
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.value = 3.5; lfoGain.gain.value = 0.25;
+    lfo.connect(lfoGain); lfoGain.connect(g.gain);
+    osc.connect(g); g.connect(master);
+    osc.start(); lfo.start();
+    return { stop: () => { osc.stop(); lfo.stop(); } };
+  };
+
+  const tick = () => {
+    const ctx = ctxRef.current;
+    if (!ctx) return;
+    const t = ctx.currentTime - startRef.current;
+    setTime(t);
+    if (t >= dur) { stop(); setTime(0); return; }
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  const toggle = () => {
+    if (a.type === 'doc') return;
+    if (playing) { stop(); return; }
+    const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = ctxRef.current ?? new Ctx();
+    ctxRef.current = ctx;
+    if (ctx.state === 'suspended') ctx.resume();
+    nodesRef.current = buildSound(ctx, a.sound ?? 'voice');
+    startRef.current = ctx.currentTime - time;
+    setPlaying(true);
+    rafRef.current = requestAnimationFrame(tick);
+  };
+
+  const progress = dur ? Math.min(time / dur, 1) : 0;
+
+  return (
+    <div className="border border-border bg-card/50 p-5 flex flex-col hover:border-accent/50 transition-colors fade-up" style={{ animationDelay: `${delay}s` }}>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 flex items-center justify-center border border-border bg-background">
+          <Icon name={a.icon} size={18} className={a.type === 'doc' ? 'text-accent' : 'text-primary'} />
+        </div>
+        <span className="font-display text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{a.date}</span>
+      </div>
+      <h4 className="font-display text-base mb-1 leading-snug">{a.title}</h4>
+      <p className="font-body text-xs text-muted-foreground mb-4">{a.meta}</p>
+
+      {isAudio ? (
+        <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
+          <button onClick={toggle} className="text-foreground/80 hover:text-primary transition-colors shrink-0" aria-label={playing ? 'Пауза' : 'Воспроизвести'}>
+            <Icon name={playing ? 'Pause' : 'Play'} size={18} className={playing ? 'text-primary' : ''} />
+          </button>
+          <div className="flex-1 h-1 bg-border relative overflow-hidden cursor-pointer" onClick={toggle}>
+            <span className="absolute inset-y-0 left-0 bg-primary/70 transition-[width] duration-100" style={{ width: `${progress * 100}%` }} />
+          </div>
+          <span className="font-display text-[10px] text-muted-foreground tabular-nums shrink-0">
+            {playing ? fmt(time) : fmt(dur)}
+          </span>
+        </div>
+      ) : (
+        <button className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3 hover:border-accent/50 transition-colors w-full">
+          <Icon name="FileDown" size={16} className="text-foreground/80" />
+          <span className="flex-1 text-left font-display text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Открыть</span>
+        </button>
+      )}
     </div>
   );
 };
