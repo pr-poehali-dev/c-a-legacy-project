@@ -33,9 +33,41 @@ const PROJECTS = [
 ];
 
 const ARCHIVE = [
-  { type: 'video', icon: 'Video', title: 'VHS-запись: Демонстрация Кейна', date: '12.03.1997', meta: 'Видео · 04:21 · повреждено', dur: 16, sound: 'corrupt' },
-  { type: 'audio', icon: 'AudioLines', title: 'Диктофон: Совещание о замене ИИ', date: '28.08.1998', meta: 'Аудио · 11:07', dur: 14, sound: 'voice' },
-  { type: 'audio', icon: 'Radio', title: 'Перехват: голос Кейна', date: '15.10.1999', meta: 'Аудио · 00:43 · искажено', dur: 10, sound: 'glitch' },
+  {
+    type: 'video', icon: 'Video', title: 'VHS-запись: Демонстрация Кейна', date: '12.03.1997',
+    meta: 'Видео · 04:21 · повреждено', dur: 16, sound: 'corrupt',
+    transcript: [
+      { at: 0,  text: '[ШУМ ПЛЁНКИ]  Инициализация демонстрационного режима…' },
+      { at: 3,  text: 'Королёр: Смотрите — он уже распознаёт контекст самостоятельно.' },
+      { at: 6,  text: 'Кейн: ██████████████  я вижу всех вас.' },
+      { at: 9,  text: '[ВИДЕО ПОВРЕЖДЕНО]  ▓▓▒░ сигнал потерян на 2 сек.' },
+      { at: 11, text: 'Скрэтч (шёпотом): Он не должен был этого говорить.' },
+      { at: 14, text: '[КОНЕЦ ПЛЁНКИ]' },
+    ],
+  },
+  {
+    type: 'audio', icon: 'AudioLines', title: 'Диктофон: Совещание о замене ИИ', date: '28.08.1998',
+    meta: 'Аудио · 11:07', dur: 14, sound: 'voice',
+    transcript: [
+      { at: 0,  text: '[ДИКТОФОННАЯ ЗАПИСЬ]  Совещание, 28 августа 1998 г.' },
+      { at: 2,  text: 'Голос №1: Нестабильность прогрессирует. Нужно принять меры.' },
+      { at: 5,  text: 'Голос №2: Предлагаю полную изоляцию и замену на стабильный модуль.' },
+      { at: 8,  text: 'Голос №1: Кейн уже знает об этом решении? …' },
+      { at: 10, text: '[ПАУЗА 4 сек.]  Голос №2: Не должен. Но я не уверен.' },
+      { at: 12, text: '[ЗАПИСЬ ОБРЫВАЕТСЯ]' },
+    ],
+  },
+  {
+    type: 'audio', icon: 'Radio', title: 'Перехват: голос Кейна', date: '15.10.1999',
+    meta: 'Аудио · 00:43 · искажено', dur: 10, sound: 'glitch',
+    transcript: [
+      { at: 0,  text: '[СИГНАЛ ПЕРЕХВАЧЕН]  15.10.1999  23:58:07' },
+      { at: 2,  text: 'Кейн: Добро  п̷о̷ж̷а̷л̷о̷в̷а̷т̷ь̷  в цирк.' },
+      { at: 4,  text: '█▓▒░  ИСКАЖЕНИЕ  ░▒▓█' },
+      { at: 6,  text: 'Кейн: Вы будете здесь… н̸а̸в̸с̸е̸г̸д̸а̸.' },
+      { at: 8,  text: '[КОНЕЦ ПЕРЕХВАТА]  Источник: сервер C&A' },
+    ],
+  },
   { type: 'doc', icon: 'FileText', title: 'Отчёт: «Язык Скрэтча»', date: '04.02.1997', meta: 'Документ · 18 стр.' },
   { type: 'doc', icon: 'FileWarning', title: 'Протокол изоляции №7', date: '10.10.1999', meta: 'Документ · ДОСТУП ОГРАНИЧЕН' },
   { type: 'doc', icon: 'Building2', title: 'Акт о продаже офиса', date: '2008', meta: 'Документ · недвижимость' },
@@ -347,6 +379,9 @@ const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
 
   const progress = dur ? Math.min(time / dur, 1) : 0;
 
+  const transcript = (a as { transcript?: { at: number; text: string }[] }).transcript ?? [];
+  const currentLine = [...transcript].reverse().find(l => time >= l.at);
+
   return (
     <div className="border border-border bg-card/50 p-5 flex flex-col hover:border-accent/50 transition-colors fade-up" style={{ animationDelay: `${delay}s` }}>
       <div className="flex items-center gap-3 mb-4">
@@ -359,17 +394,45 @@ const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
       <p className="font-body text-xs text-muted-foreground mb-4">{a.meta}</p>
 
       {isAudio ? (
-        <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
-          <button onClick={toggle} className="text-foreground/80 hover:text-primary transition-colors shrink-0" aria-label={playing ? 'Пауза' : 'Воспроизвести'}>
-            <Icon name={playing ? 'Pause' : 'Play'} size={18} className={playing ? 'text-primary' : ''} />
-          </button>
-          <div className="flex-1 h-1 bg-border relative overflow-hidden cursor-pointer" onClick={toggle}>
-            <span className="absolute inset-y-0 left-0 bg-primary/70 transition-[width] duration-100" style={{ width: `${progress * 100}%` }} />
+        <>
+          {/* Экран расшифровки — виден только при воспроизведении */}
+          <div className={`relative overflow-hidden border border-border bg-black transition-all duration-500 ${playing ? 'max-h-40 mb-3 opacity-100' : 'max-h-0 mb-0 opacity-0'}`}>
+            {/* CRT-линии */}
+            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.25) 3px, rgba(0,0,0,0.25) 4px)' }} />
+            {/* Прошлые строки */}
+            <div className="p-3 space-y-1 min-h-[90px] flex flex-col justify-end">
+              {transcript
+                .filter(l => time >= l.at && l !== currentLine)
+                .slice(-3)
+                .map((l, i) => (
+                  <p key={i} className="font-body text-[11px] text-muted-foreground/40 leading-snug">{l.text}</p>
+                ))}
+              {currentLine && (
+                <p key={currentLine.at} className="font-body text-[12px] text-foreground leading-snug animate-fade-in">
+                  <span className="text-primary mr-1">▶</span>{currentLine.text}
+                </p>
+              )}
+            </div>
+            {/* Нижний градиент */}
+            <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-black to-transparent pointer-events-none" />
           </div>
-          <span className="font-display text-[10px] text-muted-foreground tabular-nums shrink-0">
-            {playing ? fmt(time) : fmt(dur)}
-          </span>
-        </div>
+
+          {/* Плеер */}
+          <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
+            <button onClick={toggle} className="text-foreground/80 hover:text-primary transition-colors shrink-0" aria-label={playing ? 'Пауза' : 'Воспроизвести'}>
+              <Icon name={playing ? 'Pause' : 'Play'} size={18} className={playing ? 'text-primary' : ''} />
+            </button>
+            <div className="flex-1 h-1 bg-border relative overflow-hidden">
+              <span className="absolute inset-y-0 left-0 bg-primary/70 transition-[width] duration-100" style={{ width: `${progress * 100}%` }} />
+              {playing && (
+                <span className="absolute inset-y-0 bg-primary/30 w-6 blur-sm" style={{ left: `${progress * 100}%` }} />
+              )}
+            </div>
+            <span className="font-display text-[10px] text-muted-foreground tabular-nums shrink-0">
+              {playing ? fmt(time) : fmt(dur)}
+            </span>
+          </div>
+        </>
       ) : (
         <button className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3 hover:border-accent/50 transition-colors w-full">
           <Icon name="FileDown" size={16} className="text-foreground/80" />
