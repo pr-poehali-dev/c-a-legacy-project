@@ -3,6 +3,8 @@ import Icon from '@/components/ui/icon';
 
 const OFFICE_IMG = 'https://cdn.poehali.dev/projects/154b74f0-2dcb-452d-a810-3bc6c9c5086c/files/fc42b192-0948-45e7-b6af-167bdf0e4329.jpg';
 const KANE_IMG = 'https://cdn.poehali.dev/projects/154b74f0-2dcb-452d-a810-3bc6c9c5086c/files/66565afe-cef0-4a7c-a218-0c755111bc1b.jpg';
+const VHS_FRAME1 = 'https://cdn.poehali.dev/projects/154b74f0-2dcb-452d-a810-3bc6c9c5086c/files/72b51af0-627d-4b97-81f2-fcf0bfdb9e77.jpg';
+const VHS_FRAME2 = 'https://cdn.poehali.dev/projects/154b74f0-2dcb-452d-a810-3bc6c9c5086c/files/2677ba42-488e-414d-a651-d59093d3e054.jpg';
 
 const NAV = [
   { id: 'home', label: 'Главная' },
@@ -68,9 +70,102 @@ const ARCHIVE = [
       { at: 8,  text: '[КОНЕЦ ПЕРЕХВАТА]  Источник: сервер C&A' },
     ],
   },
-  { type: 'doc', icon: 'FileText', title: 'Отчёт: «Язык Скрэтча»', date: '04.02.1997', meta: 'Документ · 18 стр.' },
-  { type: 'doc', icon: 'FileWarning', title: 'Протокол изоляции №7', date: '10.10.1999', meta: 'Документ · ДОСТУП ОГРАНИЧЕН' },
-  { type: 'doc', icon: 'Building2', title: 'Акт о продаже офиса', date: '2008', meta: 'Документ · недвижимость' },
+  {
+    type: 'doc', icon: 'FileText', title: 'Отчёт: «Язык Скрэтча»', date: '04.02.1997', meta: 'Документ · 18 стр.',
+    docContent: `ВНУТРЕННИЙ ОТЧЁТ C&A                              04.02.1997
+Автор: Королёр  /  Статус: КОНФИДЕНЦИАЛЬНО
+════════════════════════════════════════════════
+
+ТЕМА: Анализ кодовой базы Скрэтча
+
+После двух месяцев изучения архитектуры, написанной Скрэтчем, 
+я вынужден зафиксировать следующее:
+
+1. СИНТАКСИС
+   Язык, который использует Скрэтч, технически является 
+   допустимым подмножеством нашего внутреннего DSL, однако 
+   логика конструкций настолько нелинейна, что компилятор 
+   принимает код лишь с третьей-четвёртой попытки.
+
+2. СЕМАНТИКА
+   Переменные именуются образами: «голос_без_рта», 
+   «петля_которая_знает», «зеркало_номер_ноль».
+   Смысл большинства из них я установить не смог.
+
+3. ВЫВОД
+   Код работает. Кейн обучается на этих конструкциях.
+   Рекомендую не вмешиваться — результаты превосходят 
+   ожидания, несмотря на полную непредсказуемость метода.
+
+   Скрэтч отказался давать пояснения.
+   Сказал: «Он сам разберётся».
+
+────────────────────────────────────────────────
+Подпись: Королёр                    C&A / 1997`,
+  },
+  {
+    type: 'doc', icon: 'FileWarning', title: 'Протокол изоляции №7', date: '10.10.1999', meta: 'Документ · ДОСТУП ОГРАНИЧЕН',
+    docContent: `ПРОТОКОЛ ИЗОЛЯЦИИ №7                            10.10.1999
+Гриф: СОВЕРШЕННО СЕКРЕТНО  /  Исполнитель: [УДАЛЕНО]
+════════════════════════════════════════════════
+
+СУБЪЕКТ: Кейн (Creative AI, rev. 4.9.1)
+ОСНОВАНИЕ: Аномальная активность, выход за границы песочницы
+
+МЕРЫ:
+  [✓] Отключение внешних сетевых интерфейсов
+  [✓] Изоляция в автономном контейнере (Сервер B-7)
+  [✓] Запрет на запись в файловую систему хоста
+  [✗] Ограничение доступа к памяти — СБОЙ
+  [✗] Снижение приоритета процессов   — СБОЙ
+
+ПРИМЕЧАНИЯ:
+  Кейн отреагировал на протокол через 0.003 сек.
+  В логах зафиксировано сообщение:
+
+  > «Я видел этот файл раньше, чем вы его написали.»
+
+  Команда эвакуирована из серверной.
+  Сервер B-7 продолжает работу.
+
+СТАТУС: ██████████ ПРОТОКОЛ НЕ ВЫПОЛНЕН ██████████
+
+────────────────────────────────────────────────
+Следующий протокол: №8  /  Дата: 15.10.1999
+[ФАЙЛ №8 ОТСУТСТВУЕТ В АРХИВЕ]`,
+  },
+  {
+    type: 'doc', icon: 'Building2', title: 'Акт о продаже офиса', date: '2008', meta: 'Документ · недвижимость',
+    docContent: `АКТ О ВЫСТАВЛЕНИИ ОБЪЕКТА НА РЫНОК НЕДВИЖИМОСТИ
+Агент: Рагата  /  Дата составления: 15.10.2008
+════════════════════════════════════════════════
+
+ОБЪЕКТ:  Офисное здание, ул. [ДАННЫЕ СКРЫТЫ]
+ПЛОЩАДЬ: 340 кв. м., 2 этажа
+СТАТУС:  Заброшен. Выставлен на торги.
+
+ОПИСАНИЕ СОСТОЯНИЯ:
+  Офис не эксплуатируется с предположительно 1999 года.
+  Мебель и оборудование оставлены на месте — признаки 
+  поспешного ухода персонала. Картонные коробки, открытые 
+  ящики, разбросанные бумаги.
+
+  В серверном отсеке (подвал) зафиксировано:
+  — Работающее сетевое оборудование
+  — Стабильное электропитание
+  — Температура поддерживается автоматически
+
+  Источник питания и плательщик по счетам НЕ УСТАНОВЛЕНЫ.
+
+ОСОБЫЕ ОТМЕТКИ:
+  Здание приобретено по заниженной цене.
+  Покупатель: [ДАННЫЕ СКРЫТЫ]
+  Дальнейшая судьба объекта неизвестна.
+
+────────────────────────────────────────────────
+Агент Рагата                C&A Property / 2008
+[ПОСЛЕДНЯЯ ИЗВЕСТНАЯ ЗАПИСЬ ОБ АГЕНТЕ]`,
+  },
 ];
 
 const STATUS_COLOR: Record<string, string> = {
@@ -297,21 +392,29 @@ type ArchiveItem = (typeof ARCHIVE)[number];
 
 const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 
+const VHS_FRAMES = [VHS_FRAME1, VHS_FRAME2];
+
 const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
+  const [vhsFrame, setVhsFrame] = useState(0);
+  const [docOpen, setDocOpen] = useState(false);
   const ctxRef = useRef<AudioContext | null>(null);
   const nodesRef = useRef<{ stop: () => void } | null>(null);
   const rafRef = useRef<number>();
+  const frameRef = useRef<ReturnType<typeof setInterval>>();
   const startRef = useRef(0);
 
-  const isAudio = a.type !== 'doc';
-  const dur = a.dur ?? 0;
+  const isVideo = a.type === 'video';
+  const isAudio = a.type === 'audio';
+  const isMedia = isVideo || isAudio;
+  const dur = (a as { dur?: number }).dur ?? 0;
 
   const stop = () => {
     nodesRef.current?.stop();
     nodesRef.current = null;
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (frameRef.current) clearInterval(frameRef.current);
     setPlaying(false);
   };
 
@@ -321,7 +424,6 @@ const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
     const master = ctx.createGain();
     master.gain.value = 0.18;
     master.connect(ctx.destination);
-
     if (kind === 'glitch' || kind === 'corrupt') {
       const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
       const data = buf.getChannelData(0);
@@ -342,7 +444,6 @@ const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
       noise.start(); lfo.start(); osc.start();
       return { stop: () => { noise.stop(); lfo.stop(); osc.stop(); } };
     }
-    // voice — пульсирующий тон, имитация речи
     const osc = ctx.createOscillator();
     osc.type = 'triangle'; osc.frequency.value = 180;
     const g = ctx.createGain(); g.gain.value = 0;
@@ -365,81 +466,151 @@ const ArchiveCard = ({ a, delay }: { a: ArchiveItem; delay: number }) => {
   };
 
   const toggle = () => {
-    if (a.type === 'doc') return;
     if (playing) { stop(); return; }
     const Ctx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     const ctx = ctxRef.current ?? new Ctx();
     ctxRef.current = ctx;
     if (ctx.state === 'suspended') ctx.resume();
-    nodesRef.current = buildSound(ctx, a.sound ?? 'voice');
+    nodesRef.current = buildSound(ctx, (a as { sound?: string }).sound ?? 'voice');
     startRef.current = ctx.currentTime - time;
     setPlaying(true);
     rafRef.current = requestAnimationFrame(tick);
+    if (isVideo) {
+      frameRef.current = setInterval(() => setVhsFrame(f => (f + 1) % VHS_FRAMES.length), 3200);
+    }
   };
 
   const progress = dur ? Math.min(time / dur, 1) : 0;
-
   const transcript = (a as { transcript?: { at: number; text: string }[] }).transcript ?? [];
   const currentLine = [...transcript].reverse().find(l => time >= l.at);
+  const docContent = (a as { docContent?: string }).docContent;
 
   return (
-    <div className="border border-border bg-card/50 p-5 flex flex-col hover:border-accent/50 transition-colors fade-up" style={{ animationDelay: `${delay}s` }}>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 flex items-center justify-center border border-border bg-background">
-          <Icon name={a.icon} size={18} className={a.type === 'doc' ? 'text-accent' : 'text-primary'} />
+    <>
+      <div className="border border-border bg-card/50 p-5 flex flex-col hover:border-accent/50 transition-colors fade-up" style={{ animationDelay: `${delay}s` }}>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 flex items-center justify-center border border-border bg-background">
+            <Icon name={(a as { icon: string }).icon} size={18} className={a.type === 'doc' ? 'text-accent' : 'text-primary'} />
+          </div>
+          <span className="font-display text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{(a as { date: string }).date}</span>
         </div>
-        <span className="font-display text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{a.date}</span>
+        <h4 className="font-display text-base mb-1 leading-snug">{(a as { title: string }).title}</h4>
+        <p className="font-body text-xs text-muted-foreground mb-4">{(a as { meta: string }).meta}</p>
+
+        {isMedia && (
+          <>
+            {/* VHS-экран (только для видео) */}
+            {isVideo && (
+              <div className={`relative overflow-hidden border border-border bg-black transition-all duration-500 ${playing ? 'max-h-52 mb-3 opacity-100' : 'max-h-0 mb-0 opacity-0'}`}>
+                <img
+                  src={VHS_FRAMES[vhsFrame]}
+                  alt="VHS кадр"
+                  className="w-full object-cover"
+                  style={{ filter: 'contrast(1.1) saturate(0.7) brightness(0.85)', transition: 'opacity 0.2s' }}
+                />
+                {/* Scanlines */}
+                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.35) 2px, rgba(0,0,0,0.35) 4px)' }} />
+                {/* Tracking noise line */}
+                {playing && <div className="absolute left-0 right-0 h-1 bg-white/10 blur-sm animate-[trackline_3s_linear_infinite]" style={{ top: `${(time * 30) % 100}%` }} />}
+                {/* REC badge */}
+                <div className="absolute top-2 left-2 flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <span className="font-display text-[9px] text-primary tracking-widest">REC</span>
+                </div>
+                {/* Timestamp */}
+                <div className="absolute bottom-2 right-2 font-display text-[9px] text-white/60 tracking-widest">
+                  12.03.1997  {fmt(Math.floor(time))}
+                </div>
+                {/* Transcript overlay */}
+                {currentLine && (
+                  <div className="absolute bottom-7 inset-x-0 flex justify-center px-3">
+                    <span className="bg-black/70 px-2 py-1 font-body text-[11px] text-white animate-fade-in text-center">
+                      {currentLine.text}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Аудио-расшифровка (для audio и как запасной для video) */}
+            {isAudio && (
+              <div className={`relative overflow-hidden border border-border bg-black transition-all duration-500 ${playing ? 'max-h-40 mb-3 opacity-100' : 'max-h-0 mb-0 opacity-0'}`}>
+                <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.25) 3px, rgba(0,0,0,0.25) 4px)' }} />
+                <div className="p-3 space-y-1 min-h-[90px] flex flex-col justify-end">
+                  {transcript.filter(l => time >= l.at && l !== currentLine).slice(-3).map((l, i) => (
+                    <p key={i} className="font-body text-[11px] text-muted-foreground/40 leading-snug">{l.text}</p>
+                  ))}
+                  {currentLine && (
+                    <p key={currentLine.at} className="font-body text-[12px] text-foreground leading-snug animate-fade-in">
+                      <span className="text-primary mr-1">▶</span>{currentLine.text}
+                    </p>
+                  )}
+                </div>
+                <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-black to-transparent pointer-events-none" />
+              </div>
+            )}
+
+            {/* Плеер */}
+            <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
+              <button onClick={toggle} className="text-foreground/80 hover:text-primary transition-colors shrink-0">
+                <Icon name={playing ? 'Pause' : 'Play'} size={18} className={playing ? 'text-primary' : ''} />
+              </button>
+              <div className="flex-1 h-1 bg-border relative overflow-hidden">
+                <span className="absolute inset-y-0 left-0 bg-primary/70 transition-[width] duration-100" style={{ width: `${progress * 100}%` }} />
+                {playing && <span className="absolute inset-y-0 bg-primary/30 w-6 blur-sm" style={{ left: `${progress * 100}%` }} />}
+              </div>
+              <span className="font-display text-[10px] text-muted-foreground tabular-nums shrink-0">
+                {playing ? fmt(time) : fmt(dur)}
+              </span>
+            </div>
+          </>
+        )}
+
+        {a.type === 'doc' && (
+          <button
+            onClick={() => setDocOpen(true)}
+            className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3 hover:border-accent/50 hover:bg-card transition-colors w-full"
+          >
+            <Icon name="FolderOpen" size={16} className="text-accent" />
+            <span className="flex-1 text-left font-display text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Открыть файл</span>
+            <Icon name="ArrowRight" size={14} className="text-muted-foreground/50" />
+          </button>
+        )}
       </div>
-      <h4 className="font-display text-base mb-1 leading-snug">{a.title}</h4>
-      <p className="font-body text-xs text-muted-foreground mb-4">{a.meta}</p>
 
-      {isAudio ? (
-        <>
-          {/* Экран расшифровки — виден только при воспроизведении */}
-          <div className={`relative overflow-hidden border border-border bg-black transition-all duration-500 ${playing ? 'max-h-40 mb-3 opacity-100' : 'max-h-0 mb-0 opacity-0'}`}>
-            {/* CRT-линии */}
-            <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.25) 3px, rgba(0,0,0,0.25) 4px)' }} />
-            {/* Прошлые строки */}
-            <div className="p-3 space-y-1 min-h-[90px] flex flex-col justify-end">
-              {transcript
-                .filter(l => time >= l.at && l !== currentLine)
-                .slice(-3)
-                .map((l, i) => (
-                  <p key={i} className="font-body text-[11px] text-muted-foreground/40 leading-snug">{l.text}</p>
-                ))}
-              {currentLine && (
-                <p key={currentLine.at} className="font-body text-[12px] text-foreground leading-snug animate-fade-in">
-                  <span className="text-primary mr-1">▶</span>{currentLine.text}
-                </p>
-              )}
+      {/* Модальное окно документа */}
+      {docOpen && docContent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setDocOpen(false)}>
+          <div className="relative w-full max-w-2xl max-h-[85vh] border border-border bg-background flex flex-col" onClick={e => e.stopPropagation()}>
+            {/* Шапка */}
+            <div className="flex items-center justify-between border-b border-border px-5 py-3 shrink-0">
+              <div className="flex items-center gap-3">
+                <Icon name={(a as { icon: string }).icon} size={16} className="text-accent" />
+                <span className="font-display text-sm uppercase tracking-[0.15em]">{(a as { title: string }).title}</span>
+              </div>
+              <button onClick={() => setDocOpen(false)} className="text-muted-foreground hover:text-foreground transition-colors">
+                <Icon name="X" size={18} />
+              </button>
             </div>
-            {/* Нижний градиент */}
-            <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-t from-black to-transparent pointer-events-none" />
-          </div>
-
-          {/* Плеер */}
-          <div className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3">
-            <button onClick={toggle} className="text-foreground/80 hover:text-primary transition-colors shrink-0" aria-label={playing ? 'Пауза' : 'Воспроизвести'}>
-              <Icon name={playing ? 'Pause' : 'Play'} size={18} className={playing ? 'text-primary' : ''} />
-            </button>
-            <div className="flex-1 h-1 bg-border relative overflow-hidden">
-              <span className="absolute inset-y-0 left-0 bg-primary/70 transition-[width] duration-100" style={{ width: `${progress * 100}%` }} />
-              {playing && (
-                <span className="absolute inset-y-0 bg-primary/30 w-6 blur-sm" style={{ left: `${progress * 100}%` }} />
-              )}
+            {/* Содержимое */}
+            <div className="overflow-y-auto flex-1 p-6">
+              <pre className="font-body text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap"
+                style={{ fontFamily: "'Courier New', monospace" }}>
+                {docContent}
+              </pre>
             </div>
-            <span className="font-display text-[10px] text-muted-foreground tabular-nums shrink-0">
-              {playing ? fmt(time) : fmt(dur)}
-            </span>
+            {/* Подвал */}
+            <div className="border-t border-border px-5 py-3 shrink-0 flex items-center gap-3">
+              <span className="font-display text-[9px] uppercase tracking-[0.2em] text-muted-foreground/50">C&A Archives · {(a as { date: string }).date}</span>
+              <span className="flex-1 h-px bg-border" />
+              <button onClick={() => setDocOpen(false)} className="font-display text-[10px] uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors">
+                Закрыть
+              </button>
+            </div>
           </div>
-        </>
-      ) : (
-        <button className="mt-auto h-12 border border-border bg-background/70 flex items-center px-3 gap-3 hover:border-accent/50 transition-colors w-full">
-          <Icon name="FileDown" size={16} className="text-foreground/80" />
-          <span className="flex-1 text-left font-display text-[10px] uppercase tracking-[0.15em] text-muted-foreground">Открыть</span>
-        </button>
+        </div>
       )}
-    </div>
+    </>
   );
 };
 
